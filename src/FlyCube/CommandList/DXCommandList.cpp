@@ -730,7 +730,12 @@ void DXCommandList::ResolveQueryData(const std::shared_ptr<QueryHeap>& query_hea
                                                  D3D12_RESOURCE_STATE_UNORDERED_ACCESS, 0));
 }
 
-void DXCommandList::SetConstant(uint32_t root_parameter_index, uint32_t value, uint32_t byte_offset)
+void DXCommandList::SetGraphicsConstant(uint32_t root_parameter_index, uint32_t value, uint32_t byte_offset)
+{
+    m_command_list->SetGraphicsRoot32BitConstant(root_parameter_index, value, byte_offset);
+}
+
+void DXCommandList::SetComputeConstant(uint32_t root_parameter_index, uint32_t value, uint32_t byte_offset)
 {
     m_command_list->SetComputeRoot32BitConstant(root_parameter_index, value, byte_offset);
 }
