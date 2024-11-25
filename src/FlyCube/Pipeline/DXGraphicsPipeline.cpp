@@ -253,12 +253,13 @@ void DXGraphicsPipeline::ParseInputLayout(const std::shared_ptr<Shader>& shader)
         }
         m_input_layout_stride[vertex.slot] = vertex.stride;
         m_input_layout_desc_names[vertex.slot] = semantic_name;
-        layout.SemanticName = m_input_layout_desc_names[vertex.slot].c_str();
-        layout.SemanticIndex = semantic_slot;
+        layout.SemanticName = vertex.semantic_name.c_str();
+        layout.SemanticIndex = 0;
         layout.InputSlot = vertex.slot;
         layout.InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
         layout.InstanceDataStepRate = 0;
         layout.Format = static_cast<DXGI_FORMAT>(gli::dx().translate(vertex.format).DXGIFormat.DDS);
+        layout.AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
         m_input_layout_desc.push_back(layout);
     }
 }
