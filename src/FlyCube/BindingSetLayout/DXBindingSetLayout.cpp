@@ -130,7 +130,7 @@ DXBindingSetLayout::DXBindingSetLayout(DXDevice& device, const std::vector<BindK
         }
 
         if (bind_key.is_root_constant) {
-            add_root_constant(bind_key.slot, bind_key.space, 1, bind_key.shader_type);
+            add_root_constant(bind_key.slot, bind_key.space, bind_key.count, bind_key.shader_type);
             continue;
         }
 
