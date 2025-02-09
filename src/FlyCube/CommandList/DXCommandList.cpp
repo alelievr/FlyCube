@@ -740,6 +740,11 @@ void DXCommandList::SetComputeConstant(uint32_t root_parameter_index, uint32_t v
     m_command_list->SetComputeRoot32BitConstant(root_parameter_index, value, byte_offset);
 }
 
+void DXCommandList::SetName(const std::string& name)
+{
+    m_command_list->SetName(nowide::widen(name).c_str());
+}
+
 ComPtr<ID3D12GraphicsCommandList> DXCommandList::GetCommandList()
 {
     return m_command_list;
