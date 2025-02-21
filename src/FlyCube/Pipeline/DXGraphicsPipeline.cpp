@@ -251,7 +251,6 @@ void DXGraphicsPipeline::ParseInputLayout(const std::shared_ptr<Shader>& shader)
             semantic_name.pop_back();
             pow *= 10;
         }
-        m_input_layout_stride[vertex.slot] = vertex.stride;
         m_input_layout_desc_names[vertex.slot] = semantic_name;
         layout.SemanticName = m_input_layout_desc_names[vertex.slot].c_str();
         layout.SemanticIndex = semantic_slot;
