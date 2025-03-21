@@ -355,9 +355,19 @@ void MTCommandList::DispatchIndirect(const std::shared_ptr<Resource>& argument_b
     });
 }
 
-void MTCommandList::DispatchMesh(uint32_t thread_group_count_x)
+void MTCommandList::DispatchMesh(uint32_t thread_group_count_x,
+                                 uint32_t thread_group_count_y,
+                                 uint32_t thread_group_count_z)
 {
-    assert(false);
+    ApplyState();
+    ApplyAndRecord([&render_encoder = m_render_encoder, state = m_state, thread_group_count_x, thread_group_count_y,
+                    thread_group_count_z] {
+        decltype(auto) mt_state = state->As<MTGraphicsPipeline>();
+        [render_encoder
+                   drawMeshThreadgroups:MTLSizeMake(thread_group_count_x, thread_group_count_y, thread_group_count_z)
+            threadsPerObjectThreadgroup:mt_state.GetAmplificationNumthreads()
+              threadsPerMeshThreadgroup:mt_state.GetMeshNumthreads()];
+    });
 }
 
 void MTCommandList::DispatchRays(const RayTracingShaderTables& shader_tables,
@@ -616,6 +626,13 @@ void MTCommandList::ResolveQueryData(const std::shared_ptr<QueryHeap>& query_hea
     assert(false);
 }
 
+void MTCommandList::SetName(const std::string& name)
+{
+    ApplyAndRecord([&command_buffer = m_command_buffer, name] {
+        command_buffer.label = [NSString stringWithUTF8String:name.c_str()];
+    });
+}
+
 id<MTLCommandBuffer> MTCommandList::GetCommandBuffer()
 {
     return m_command_buffer;
@@ -643,7 +660,9 @@ void MTCommandList::ApplyBindingSet()
     assert(m_state->GetPipelineType() == PipelineType::kGraphics);
 
     ApplyAndRecord([&render_encoder = m_render_encoder, binding_set = m_binding_set, state = m_state] {
-        binding_set->Apply(render_encoder, state);
+        if (binding_set) {
+            binding_set->Apply(render_encoder, state);
+        }
     });
 
     m_last_binding_set = m_binding_set;

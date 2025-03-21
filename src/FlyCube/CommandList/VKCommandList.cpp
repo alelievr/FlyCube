@@ -243,10 +243,12 @@ void VKCommandList::DispatchIndirect(const std::shared_ptr<Resource>& argument_b
     m_command_list->dispatchIndirect(vk_argument_buffer.buffer.res.get(), argument_buffer_offset);
 }
 
-void VKCommandList::DispatchMesh(uint32_t thread_group_count_x)
+void VKCommandList::DispatchMesh(uint32_t thread_group_count_x,
+                                 uint32_t thread_group_count_y,
+                                 uint32_t thread_group_count_z)
 {
 #ifndef USE_STATIC_MOLTENVK
-    m_command_list->drawMeshTasksNV(thread_group_count_x, 0);
+    m_command_list->drawMeshTasksEXT(thread_group_count_x, thread_group_count_y, thread_group_count_z);
 #endif
 }
 
@@ -763,6 +765,15 @@ void VKCommandList::ResolveQueryData(const std::shared_ptr<QueryHeap>& query_hea
     m_command_list->copyQueryPoolResults(vk_query_heap.GetQueryPool(), first_query, query_count,
                                          dst_buffer->As<VKResource>().buffer.res.get(), dst_offset, sizeof(uint64_t),
                                          vk::QueryResultFlagBits::eWait);
+}
+
+void VKCommandList::SetName(const std::string& name)
+{
+    vk::DebugUtilsObjectNameInfoEXT info = {};
+    info.pObjectName = name.c_str();
+    info.objectType = vk::ObjectType::eCommandBuffer;
+    info.objectHandle = reinterpret_cast<uint64_t>(static_cast<VkCommandBuffer>(m_command_list.get()));
+    m_device.GetDevice().setDebugUtilsObjectNameEXT(info);
 }
 
 vk::CommandBuffer VKCommandList::GetCommandList()

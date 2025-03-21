@@ -1,9 +1,7 @@
-if (NOT APPLE)
-    add_subdirectory(CoreDxrTriangle)
+if (NOT CMAKE_CROSSCOMPILING)
+    add_subdirectory(DesktopDxrTriangle)
+    add_subdirectory(DesktopTriangle)
 endif()
 
-if (NOT IOS_OR_TVOS)
-    add_subdirectory(CoreTriangle)
-endif()
-
+add_subdirectory(MeshTriangle)
 add_subdirectory(Triangle)
