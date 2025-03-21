@@ -12,6 +12,7 @@
 #include "Resource/VKResource.h"
 #include "Utilities/VKUtility.h"
 #include "View/VKView.h"
+#include "VKCommandList.h"
 
 namespace {
 

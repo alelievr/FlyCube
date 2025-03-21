@@ -94,6 +94,10 @@ ViewType GetViewType(const D3D12_SHADER_INPUT_BIND_DESC& bind_desc)
             return ViewType::kRWTexture;
         }
     }
+    case D3D_SIT_BYTEADDRESS:
+        return ViewType::kBuffer;
+    case D3D_SIT_UAV_RWBYTEADDRESS:
+		return ViewType::kRWBuffer;
     default:
         assert(false);
         return ViewType::kUnknown;
@@ -238,6 +242,9 @@ VariableLayout GetVariableLayout(const std::string& name,
         break;
     case D3D_SHADER_VARIABLE_TYPE::D3D_SVT_BOOL:
         layout.type = VariableType::kBool;
+        break;
+    case D3D_SHADER_VARIABLE_TYPE::D3D_SVT_VOID:
+        layout.type = VariableType::kStruct;
         break;
     default:
         assert(false);
