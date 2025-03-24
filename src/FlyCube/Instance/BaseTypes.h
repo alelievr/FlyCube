@@ -407,7 +407,7 @@ struct BindKey {
     uint32_t slot = 0;
     uint32_t space = 0;
     uint32_t count = 1;
-    uint32_t remapped_slot = ~0;
+    uint32_t remapped_slot = ~0u;
     bool is_root_constant = false;
 
     uint32_t GetRemappedSlot() const
